@@ -25,7 +25,6 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
         this.browser = webdriverjs
             .remote(this.options)
             .init(function(err, session) {
-                log.info('inside init callback')
                 if (err) {
                     log.error('An error occurred. Status code: %s. %s', err.status, err.message);
                     self.error = err;
@@ -33,7 +32,6 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
                 }
             })
             .url(url, function(err, response) {
-                log.info('inside url callback')
                 if (err) {
                     log.error('An error occurred. Status code: %s. %s', err.status, err.message);
                     self.error = err;
@@ -43,18 +41,14 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     }).bind(this);
 
     this.on('done', function() {
-        log.info('We are done here. State: %s', self.state);
-
-        self.browser.endAll(function() {
-            log.info('inside end callback (after done)');
+        self.browser.end(function() {
+            log.info('Browser closed.');
         });
     });
 
     this.on('kill', (function(callback) {
-        log.info('inside kill callback');
-
         this.browser.end(function() {
-            log.info('inside end callback (after kill)');
+            log.info('Browser closed.');
             callback();
             callback = null;
         });
