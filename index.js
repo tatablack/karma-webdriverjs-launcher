@@ -12,8 +12,8 @@ var defaultOptions = {
 };
 
 function getBrowserInfo(launcher) {
-    return launcher.options.desiredCapabilities.browserName +
-           launcher.options.desiredCapabilities.version ? launcher.options.desiredCapabilities.version : '';
+    return launcher.options.desiredCapabilities.browserName + 
+           (launcher.options.desiredCapabilities.version ? (' ' + launcher.options.desiredCapabilities.version) : '');
 }
 
 var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
@@ -30,13 +30,13 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     
     this.name = getBrowserInfo(this) + ' through WebdriverJS';
 
-    this._start = (function(url) {
-        var browserInfo = getBrowserInfo(this);
+    this._start = function(url) {
+        var browserInfo = getBrowserInfo(self);
 
         log.info('Loading %s using %s', url, browserInfo);
 
-        this.browser = webdriverjs
-            .remote(this.options)
+        self.browser = webdriverjs
+            .remote(self.options)
             .init(function(err, session) {
                 if (err) {
                     log.error('An error occurred while initializing %s. Status code: %s. %s', browserInfo, err.status, err.message);
@@ -51,7 +51,7 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
                     self.emit('done');
                 }
             });
-    }).bind(this);
+    };
 
     this.on('done', function() {
         self.browser.end(function() {
