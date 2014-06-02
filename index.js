@@ -3,38 +3,50 @@ var webdriverjs = require('webdriverjs'),
 
 var defaultOptions = {
     desiredCapabilities: {
-        browserName: 'internet explorer',
-        version: '9'
+        // browserName: 'internet explorer',
+        // version: '9'
     },
     logLevel: 'silent', // verbose | silent | command | data | result
     host: '127.0.0.1',
     port: 4444
 };
 
+function getBrowserInfo(launcher) {
+    return launcher.options.desiredCapabilities.browserName +
+           launcher.options.desiredCapabilities.version ? launcher.options.desiredCapabilities.version : '';
+}
+
 var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     var log = logger.create('webdriverjs'),
         self = this;
 
-    baseBrowserDecorator(this);
-
     this.options = merge(defaultOptions, args.config);
 
-    this.name = this.options.desiredCapabilities.browserName + ' through WebdriverJS';
+    if (!this.options.desiredCapabilities.browserName) {
+        log.error('No browser specified. Please provide browserName and (optionally) version in the configuration.');
+    }
+
+    baseBrowserDecorator(this);
+    
+    this.name = getBrowserInfo(this) + ' through WebdriverJS';
 
     this._start = (function(url) {
-        log.info('Loading %s', url);
+        var browserInfo = getBrowserInfo(this);
+
+        log.info('Loading %s using %s', url, browserInfo);
+
         this.browser = webdriverjs
             .remote(this.options)
             .init(function(err, session) {
                 if (err) {
-                    log.error('An error occurred while initializing. Status code: %s. %s', err.status, err.message);
+                    log.error('An error occurred while initializing %s. Status code: %s. %s', browserInfo, err.status, err.message);
                     self.error = err.message ? err.message : err;
                     self.emit('done');
                 }
             })
             .url(url, function(err, response) {
                 if (err) {
-                    log.error('An error occurred while loading the url. Status code: %s. %s', err.status, err.message);
+                    log.error('An error occurred while loading the url with %s. Status code: %s. %s', browserInfo, err.status, err.message);
                     self.error = err.message ? err.message : err;
                     self.emit('done');
                 }
@@ -43,17 +55,17 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
 
     this.on('done', function() {
         self.browser.end(function() {
-            log.info('Browser closed.');
+            log.info('Browser %s closed.', getBrowserInfo(self));
         });
     });
 
-    this.on('kill', (function(callback) {
-        this.browser.end(function() {
-            log.info('Browser closed.');
+    this.on('kill', function(callback) {
+        self.browser.end(function() {
+            log.info('Browser %s closed.', getBrowserInfo(self));
             callback();
             callback = null;
         });
-    }).bind(this));
+    });
 };
 
 WebdriverJSLauncher.$inject = ['baseBrowserDecorator', 'args', 'logger'];
