@@ -6,7 +6,8 @@ var defaultOptions = {
         // browserName: 'internet explorer',
         // version: '9'
     },
-    logLevel: 'silent', // verbose | silent | command | data | result
+    //x-ua-compatible: 'edge',
+    logLevel: 'silent', // Webdriver.IO logging: verbose | silent | command | data | result
     host: '127.0.0.1',
     port: 4444
 };
@@ -14,6 +15,16 @@ var defaultOptions = {
 function getBrowserInfo(launcher) {
     return launcher.options.desiredCapabilities.browserName + 
            (launcher.options.desiredCapabilities.version ? (' ' + launcher.options.desiredCapabilities.version) : '');
+}
+
+function getUrl(defaultUrl, launcher) {
+    var url = defaultUrl;
+
+    if (launcher.options.desiredCapabilities.browserName === 'internet explorer') {
+        url += '&x-ua-compatible=' + encodeURIComponent(launcher.options.x-ua-compatible);
+    }
+
+    return url;
 }
 
 var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
@@ -31,9 +42,10 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     this.name = getBrowserInfo(this) + ' through WebdriverJS';
 
     this._start = function(url) {
-        var browserInfo = getBrowserInfo(self);
+        var browserInfo = getBrowserInfo(self),
+            finalUrl = getUrl(url, self);
 
-        log.info('Loading %s using %s', url, browserInfo);
+        log.info('Loading %s using %s', finalUrl, browserInfo);
 
         self.browser = webdriverjs
             .remote(self.options)
@@ -44,7 +56,7 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
                     self.emit('done');
                 }
             })
-            .url(url, function(err, response) {
+            .url(finalUrl, function(err, response) {
                 if (err) {
                     log.error('An error occurred while loading the url with %s. Status code: %s. %s', browserInfo, err.status, err.message);
                     self.error = err.message ? err.message : err;
