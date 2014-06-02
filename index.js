@@ -27,14 +27,14 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
             .init(function(err, session) {
                 if (err) {
                     log.error('An error occurred. Status code: %s. %s', err.status, err.message);
-                    self.error = err;
+                    self.error = err.message ? err.message : err;
                     self.emit('done');
                 }
             })
             .url(url, function(err, response) {
                 if (err) {
                     log.error('An error occurred. Status code: %s. %s', err.status, err.message);
-                    self.error = err;
+                    self.error = err.message ? err.message : err;
                     self.emit('done');
                 }
             });
