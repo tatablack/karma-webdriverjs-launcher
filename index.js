@@ -6,7 +6,8 @@ var defaultOptions = {
         // browserName: 'internet explorer',
         // version: '9'
     },
-    //x-ua-compatible: 'edge',
+    // See: http://msdn.microsoft.com/en-us/library/jj676915(v=vs.85).aspx
+    //ieDocumentMode: 'edge',
     logLevel: 'silent', // Webdriver.IO logging: verbose | silent | command | data | result
     host: '127.0.0.1',
     port: 4444
@@ -21,7 +22,7 @@ function getUrl(defaultUrl, launcher) {
     var url = defaultUrl;
 
     if (launcher.options.desiredCapabilities.browserName === 'internet explorer') {
-        url += '&x-ua-compatible=' + encodeURIComponent(launcher.options.x-ua-compatible);
+        url += '&x-ua-compatible=' + encodeURIComponent(launcher.options.ieDocumentMode);
     }
 
     return url;
