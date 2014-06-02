@@ -1,0 +1,25 @@
+{
+  "name": "karma-webdriverjs-launcher",
+  "version": "0.1.0",
+  "description": "A Karma plugin. Launcher for Remote WebDriver instances using WebDriverJS.",
+  "main": "index.js",
+  "keywords": [
+    "karma-plugin",
+    "karma-launcher",
+    "selenium",
+    "webdriver",
+    "webdriverjs"
+  ],
+  "author": {
+    "name": "Angelo Tata",
+    "email": "angelo.tata@gmail.com"
+  },
+  "dependencies": {
+    "webdriverjs": "^1.7.1",
+    "deepmerge": "^0.2.7"
+  },
+  "peerDependencies": {
+    "karma": ">=0.12"
+  },
+  "license": "MIT"
+}
