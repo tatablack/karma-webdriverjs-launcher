@@ -17,8 +17,9 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
 
     baseBrowserDecorator(this);
 
-    this.name = 'WebdriverJS';
     this.options = merge(defaultOptions, args.config);
+
+    this.name = this.options.desiredCapabilities.browserName + ' through WebdriverJS';
 
     this._start = (function(url) {
         log.info('Loading %s', url);
