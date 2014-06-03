@@ -35,7 +35,11 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     }
 
     baseBrowserDecorator(this);
-    
+
+    // Make sure that we retry multiple times (default is 2)
+    this._retryLimit = 4;
+
+    // This allows clearer output when running multiple tests at once
     this.name = getBrowserInfo(this) + ' through WebdriverJS';
 
     this._start = function(url) {
