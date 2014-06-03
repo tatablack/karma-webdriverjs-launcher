@@ -3,12 +3,7 @@ var webdriverjs = require('webdriverjs'),
 
 var defaultOptions = {
     desiredCapabilities: {
-        // browserName: 'internet explorer',
-        // version: '9'
     },
-    // See: http://msdn.microsoft.com/en-us/library/jj676915(v=vs.85).aspx
-    //ieDocumentMode: 'edge',
-    logLevel: 'silent', // Webdriver.IO logging: verbose | silent | command | data | result
     host: '127.0.0.1',
     port: 4444
 };
@@ -21,7 +16,8 @@ function getBrowserInfo(launcher) {
 function getUrl(defaultUrl, launcher) {
     var url = defaultUrl;
 
-    if (launcher.options.desiredCapabilities.browserName === 'internet explorer') {
+    if (launcher.options.desiredCapabilities.browserName === 'internet explorer' && 
+        launcher.options.ieDocumentMode) {
         url += '&x-ua-compatible=' + encodeURIComponent(launcher.options.ieDocumentMode);
     }
 
