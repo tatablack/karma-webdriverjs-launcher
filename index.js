@@ -1,4 +1,4 @@
-var webdriverjs = require('webdriverjs'),
+var webdriverio = require('webdriverio'),
     merge  = require('deepmerge');
 
 var defaultOptions = {
@@ -24,8 +24,8 @@ function getUrl(defaultUrl, launcher) {
     return url;
 }
 
-var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
-    var log = logger.create('webdriverjs'),
+var WebdriverIOLauncher = function(baseBrowserDecorator, args, logger) {
+    var log = logger.create('webdriverio'),
         self = this;
 
     this.options = merge(defaultOptions, args.config);
@@ -40,7 +40,7 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     this._retryLimit = 4;
 
     // This allows clearer output when running multiple tests at once
-    this.name = getBrowserInfo(this) + ' through WebdriverJS';
+    this.name = getBrowserInfo(this) + ' through WebdriverIO';
 
     this._start = function(url) {
         var browserInfo = getBrowserInfo(self),
@@ -48,7 +48,7 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
 
         log.info('Loading %s using %s', finalUrl, browserInfo);
 
-        self.browser = webdriverjs
+        self.browser = webdriverio
             .remote(self.options)
             .init(function(err, session) {
                 if (err) {
@@ -81,8 +81,8 @@ var WebdriverJSLauncher = function(baseBrowserDecorator, args, logger) {
     });
 };
 
-WebdriverJSLauncher.$inject = ['baseBrowserDecorator', 'args', 'logger'];
+WebdriverIOLauncher.$inject = ['baseBrowserDecorator', 'args', 'logger'];
 
 module.exports = {
-  'launcher:WebdriverJS': ['type', WebdriverJSLauncher]
+  'launcher:WebdriverIO': ['type', WebdriverIOLauncher]
 };

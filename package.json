@@ -8,14 +8,14 @@
     "karma-launcher",
     "selenium",
     "webdriver",
-    "webdriverjs"
+    "webdriverio"
   ],
   "author": {
     "name": "Angelo Tata",
     "email": "angelo.tata@gmail.com"
   },
   "dependencies": {
-    "webdriverjs": "^1.7.1",
+    "webdriverio": "^2.3.0",
     "deepmerge": "^0.2.7"
   },
   "peerDependencies": {
