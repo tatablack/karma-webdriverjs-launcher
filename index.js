@@ -64,19 +64,25 @@ var WebdriverIOLauncher = function(baseBrowserDecorator, args, logger) {
                     self.emit('done');
                 }
             });
+
+        // Fix for browser hanging, suggested in:
+        // https://github.com/karma-runner/karma-webdriver-launcher/commit/461ad798a34357f2a56f7da1a3d49a6fa1437109
+        self._process = {
+            kill: function() {
+                self.browser.end(function() {
+                    log.info('Browser %s closed.', getBrowserInfo(self));
+                    self._onProcessExit(self.error ? -1 : 0, self.error);
+                });
+            }
+        };
     };
+
+    // We can't really force browser to quit so just avoid warning about SIGKILL
+    this._onKillTimeout = function() {};
 
     this.on('done', function() {
         self.browser.end(function() {
             log.info('Browser %s closed.', getBrowserInfo(self));
-        });
-    });
-
-    this.on('kill', function(callback) {
-        self.browser.end(function() {
-            log.info('Browser %s closed.', getBrowserInfo(self));
-            callback();
-            callback = null;
         });
     });
 };
