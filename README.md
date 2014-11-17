@@ -62,7 +62,7 @@ config: {
 
 ### config.ieDocumentMode
 
-You might want to trigger (or avoid triggering) a specific compatibility mode for IE (see [MSDN](http://msdn.microsoft.com/en-us/library/jj676915(v=vs.85).aspx) for an eplanation).
+You might want to trigger (or avoid triggering) a specific compatibility mode for IE (see [MSDN](http://msdn.microsoft.com/en-us/library/jj676915(v=vs.85).aspx) for an explanation).
 This will actually just append a parameter to the URL being loaded through Selenium, Karma itself takes care of adding the proper META tag.
 
 ```javascript
@@ -71,7 +71,7 @@ config: {
         // desired capabilities here
     },
 
-    ieDocumentMode: 'edge' // <--
+    ieDocumentMode: 'IE=edge' // <--
 }
 ```
 
